@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --accent: #00d2ff;
+  --bg-dark: #0b0e11;
+  --glass: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.1);
+}
+
+body { background: var(--bg-dark); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+.app-container { min-height: 100vh; background: radial-gradient(circle at 0% 0%, #16213e 0%, transparent 40%), radial-gradient(circle at 100% 100%, #0f3460 0%, transparent 40%); }
+
+.logo-brand { font-weight: 800; letter-spacing: -1.5px; background: linear-gradient(to right, #fff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.pro-badge { background: #00d2ff; color: #000; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 900; }
+
+.glass-nav { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+
+.btn-connect { background: transparent; border: 1.5px solid #00d2ff; color: #00d2ff; border-radius: 50px; padding: 8px 24px; font-weight: 600; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.btn-connect:hover { background: #00d2ff; color: #000; box-shadow: 0 0 20px rgba(0, 210, 255, 0.4); }
+
+.glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 24px; backdrop-filter: blur(20px); }
+
+.label-text { color: #888; font-size: 13px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+
+.input-field { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: #fff; transition: 0.3s; }
+.input-field:focus { outline: none; border-color: #00d2ff; background: rgba(0, 210, 255, 0.05); }
+
+.btn-execute { background: linear-gradient(45deg, #00d2ff, #9d50bb); border: none; border-radius: 12px; padding: 18px; font-weight: 800; color: white; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.btn-execute:hover { transform: scale(1.01); box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); }
+
+.section-title { font-weight: 800; color: #00d2ff; text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+
+.election-card-premium { background: var(--glass); border: 1px solid var(--border); border-radius: 24px; padding: 32px; transition: 0.4s; position: relative; overflow: hidden; }
+.election-card-premium:hover { border-color: rgba(0, 210, 255, 0.5); transform: translateY(-5px); }
+
+.title-text { font-weight: 800; color: #fff; }
+
+.status-tag { font-size: 12px; padding: 6px 14px; border-radius: 50px; font-weight: 700; }
+.status-live { background: rgba(0, 210, 255, 0.15); color: #00d2ff; border: 1px solid #00d2ff; }
+.status-ended { background: rgba(255, 0, 0, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; }
+
+.candidate-item { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
+.candidate-item:hover { background: rgba(255,255,255,0.06); border-color: var(--border); }
+
+.name { font-weight: 700; color: #fff; font-size: 16px; }
+.count { font-family: monospace; color: #00d2ff; font-weight: 800; font-size: 18px; }
+
+.btn-vote { background: transparent; border: 1px solid #00d2ff; color: #00d2ff; padding: 6px 20px; border-radius: 10px; font-weight: 800; text-transform: uppercase; font-size: 12px; transition: 0.3s; }
+.btn-vote:hover { background: #00d2ff; color: #000; }
+
+.live-indicator { width: 12px; height: 12px; background: #00d2ff; border-radius: 50%; box-shadow: 0 0 10px #00d2ff; animation: blink 1.5s infinite; }
+
+@keyframes blink { 0% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.4; transform: scale(0.9); } }
+
+@media (max-width: 768px) {
+  .name { font-size: 14px; }
+  .count { font-size: 16px; }
+  .election-card-premium { padding: 20px; }
+  .logo-brand { font-size: 1.2rem; }
+}
