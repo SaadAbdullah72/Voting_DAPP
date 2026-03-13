@@ -66,8 +66,17 @@ const Scene = () => {
   const tokens = useMemo(() => Array.from({ length: 5 }), []);
 
   return (
-    <div className="scene-container" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1, pointerEvents: 'none' }}>
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+    <div className="scene-container" style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      width: '100vw', 
+      height: '100vh', 
+      zIndex: 0, 
+      pointerEvents: 'none',
+      background: 'transparent'
+    }}>
+      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} gl={{ alpha: true, antialias: true }}>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
         <pointLight position={[-10, -10, -10]} intensity={1} color="#9d50bb" />

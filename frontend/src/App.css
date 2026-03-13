@@ -16,7 +16,7 @@
 }
 
 body {
-  background: var(--bg-dark);
+  background: radial-gradient(circle at 50% 50%, #0a1128 0%, #05070a 100%);
   color: #fff;
   font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
@@ -26,7 +26,7 @@ body {
 .app-canvas {
   height: 100vh;
   width: 100vw;
-  background: radial-gradient(circle at 50% 50%, #0a1128 0%, #05070a 100%);
+  background: transparent;
 }
 
 .glass-header {
