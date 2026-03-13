@@ -117,6 +117,10 @@ function App() {
 
     return (
         <div className="app-professional">
+            <div className="lighting-effect">
+                <div className="glow-orb"></div>
+            </div>
+            
             <nav className="navbar-top">
                 <div className="container d-flex justify-content-between align-items-center h-100">
                     <div className="brand-suite">
