@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import confetti from 'canvas-confetti';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Shield, Clock, Users, Activity, Wallet, Layout, ChevronRight } from 'lucide-react';
+import Scene from './components/Scene';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -24,12 +27,17 @@ const Timer = ({ endTime }) => {
         return () => clearInterval(interval);
     }, [endTime]);
 
-    if (timeLeft === 0) return <span className="status-tag status-ended">CONCLUDED</span>;
+    if (timeLeft === 0) return <span className="premium-badge badge-ended">ELECTION CONCLUDED</span>;
     
     const h = Math.floor(timeLeft / 3600);
     const m = Math.floor((timeLeft % 3600) / 60);
     const s = timeLeft % 60;
-    return <span className="status-tag status-live">{h}h {m}m {s}s remaining</span>;
+    return (
+        <span className="premium-badge badge-live">
+            <Clock size={12} className="me-1" />
+            {h}h {m}m {s}s LEFT
+        </span>
+    );
 };
 
 function App() {
@@ -38,6 +46,7 @@ function App() {
     const [elections, setElections] = useState([]);
     const [form, setForm] = useState({ title: '', desc: '', candidates: '', duration: '' });
     const [loading, setLoading] = useState(false);
+    const [showAdminPanel, setShowAdminPanel] = useState(false);
 
     const connect = async () => {
         if (!window.ethereum) return alert("Please install MetaMask extension.");
@@ -99,83 +108,137 @@ function App() {
             await tx.wait();
             confetti({ particleCount: 200, spread: 100 });
             loadElections(contract);
+            setShowAdminPanel(false);
         } catch (e) { alert("Error: " + e.reason); }
         setLoading(false);
     };
 
     return (
-        <div className="app-container font-inter">
-            <nav className="navbar navbar-dark bg-transparent border-bottom border-secondary px-4 py-3 sticky-top glass-nav">
+        <div className="app-canvas overflow-hidden">
+            <Scene />
+            
+            <nav className="glass-header px-4 py-3 sticky-top">
                 <div className="container-fluid d-flex justify-content-between align-items-center">
-                    <h2 className="logo-brand m-0">ETH VOTE <span className="pro-badge">PRO</span></h2>
-                    <button className="btn-connect" onClick={connect}>
-                        {account ? `${account.slice(0,6)}...${account.slice(-4)}` : "Connect Wallet"}
-                    </button>
+                    <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="d-flex align-items-center"
+                    >
+                        <div className="shield-logo me-2">
+                            <Shield size={24} fill="#00d2ff" />
+                        </div>
+                        <h2 className="brand-logo m-0">VOTE<span className="text-accent">DAPP</span></h2>
+                    </motion.div>
+
+                    <div className="nav-actions d-flex gap-3">
+                        {isAdmin && (
+                            <button className="btn-icon" onClick={() => setShowAdminPanel(!showAdminPanel)}>
+                                <Plus size={20} />
+                            </button>
+                        )}
+                        <button className="btn-wallet" onClick={connect}>
+                            <Wallet size={18} className="me-2" />
+                            {account ? `${account.slice(0,6)}...${account.slice(-4)}` : "Connect"}
+                        </button>
+                    </div>
                 </div>
             </nav>
 
-            <div className="container py-5">
-                {isAdmin && (
-                    <div className="admin-section fade-in mb-5 p-4 glass-card shadow-lg">
-                        <h4 className="section-header text-info mb-4">
-                            <span className="icon">🛠</span> Management Dashboard
-                        </h4>
-                        <div className="row g-3">
-                            <div className="col-md-6">
-                                <label className="label-text">Electoral Title</label>
-                                <input className="input-field" placeholder="e.g. Board of Directors" onChange={e => setForm({...form, title: e.target.value})} />
+            <main className="container-fluid py-5 main-content">
+                <AnimatePresence>
+                    {showAdminPanel && isAdmin && (
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                            className="glass-panel mx-auto mb-5 p-4 max-w-700"
+                        >
+                            <div className="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 className="m-0 text-white d-flex align-items-center">
+                                    <Activity size={20} className="me-2 text-info" />
+                                    Launch New Election
+                                </h4>
+                                <button className="btn-close-panel" onClick={() => setShowAdminPanel(false)}>×</button>
                             </div>
-                            <div className="col-md-6">
-                                <label className="label-text">Timeframe (Minutes)</label>
-                                <input className="input-field" type="number" placeholder="e.g. 120" onChange={e => setForm({...form, duration: e.target.value})} />
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <label className="p-label">Title</label>
+                                    <input className="p-input" placeholder="Board Election" onChange={e => setForm({...form, title: e.target.value})} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="p-label">Duration (Min)</label>
+                                    <input className="p-input" type="number" placeholder="60" onChange={e => setForm({...form, duration: e.target.value})} />
+                                </div>
+                                <div className="col-12">
+                                    <label className="p-label">Candidates (Comma separated)</label>
+                                    <input className="p-input" placeholder="Alice, Bob, Charlie" onChange={e => setForm({...form, candidates: e.target.value})} />
+                                </div>
+                                <div className="col-12">
+                                    <label className="p-label">Description</label>
+                                    <textarea className="p-input" rows="2" placeholder="Mandate details..." onChange={e => setForm({...form, desc: e.target.value})}></textarea>
+                                </div>
+                                <button className="btn-deploy mt-3" onClick={createElection} disabled={loading}>
+                                    {loading ? "INITIALIZING ON CHAIN..." : "DEPLOY SMART CONTRACT"}
+                                </button>
                             </div>
-                            <div className="col-12">
-                                <label className="label-text">Candidates (Separated by Commas)</label>
-                                <input className="input-field" placeholder="Apple, Microsoft, Google" onChange={e => setForm({...form, candidates: e.target.value})} />
-                            </div>
-                            <div className="col-12">
-                                <label className="label-text">Objective / Description</label>
-                                <textarea className="input-field" rows="2" placeholder="Define the purpose of this election..." onChange={e => setForm({...form, desc: e.target.value})}></textarea>
-                            </div>
-                            <button className="btn-execute w-100" onClick={createElection} disabled={loading}>
-                                {loading ? "Broadcasting to Chain..." : "DEPLOY NEW ELECTION"}
-                            </button>
-                        </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <div className="content-grid container">
+                    <div className="section-header d-flex align-items-center mb-5">
+                        <div className="pulse-dot me-3"></div>
+                        <h3 className="section-title m-0">Live Governance Sessions</h3>
                     </div>
-                )}
 
-                <div className="d-flex align-items-center mb-4">
-                    <div className="live-indicator me-3"></div>
-                    <h3 className="section-title m-0">Active Electoral Sessions</h3>
-                </div>
-
-                <div className="row g-4">
-                    {elections.length === 0 && <p className="text-muted text-center py-5">No active sessions found on chain.</p>}
-                    {elections.map(e => (
-                        <div key={e.id} className="col-lg-6">
-                            <div className="election-card-premium shadow-lg">
-                                <div className="d-flex justify-content-between align-items-start mb-3">
-                                    <h4 className="title-text m-0">{e.title}</h4>
-                                    <Timer endTime={e.endTime} />
-                                </div>
-                                <p className="desc-text mb-4">{e.desc}</p>
-                                <div className="candidate-grid">
-                                    {e.candidates.map((c, idx) => (
-                                        <div key={idx} className="candidate-item d-flex justify-content-between align-items-center">
-                                            <div className="info">
-                                                <div className="name">{c.name}</div>
-                                                <div className="count">{c.votes} <small>VOTES</small></div>
-                                            </div>
-                                            <button className="btn-vote" onClick={() => castVote(e.id, idx)}>Cast Vote</button>
-                                        </div>
-                                    ))}
-                                </div>
+                    <div className="row g-5">
+                        {elections.length === 0 && (
+                            <div className="col-12 text-center py-5">
+                                <Layout size={48} className="text-secondary opacity-25 mb-3" />
+                                <p className="text-muted">No active elections found on the Ethereum blockchain.</p>
                             </div>
-                        </div>
-                    ))}
+                        )}
+                        {elections.map((e, index) => (
+                            <motion.div 
+                                key={e.id} 
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                className="col-xl-6"
+                            >
+                                <div className="premium-card">
+                                    <div className="card-top d-flex justify-content-between align-items-start mb-4">
+                                        <div className="title-area">
+                                            <h4 className="election-title mb-1">{e.title}</h4>
+                                            <p className="election-desc">{e.desc}</p>
+                                        </div>
+                                        <Timer endTime={e.endTime} />
+                                    </div>
+                                    
+                                    <div className="candidates-stack">
+                                        {e.candidates.map((c, idx) => (
+                                            <div key={idx} className="candidate-row">
+                                                <div className="c-info">
+                                                    <span className="c-name">{c.name}</span>
+                                                    <div className="voter-stats d-flex align-items-center mt-1">
+                                                        <Users size={12} className="me-1 opacity-50" />
+                                                        <span className="c-votes">{c.votes} </span>
+                                                    </div>
+                                                </div>
+                                                <button className="btn-cast" onClick={() => castVote(e.id, idx)}>
+                                                    VOTE <ChevronRight size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
 export default App;
+pp;
