@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Shield, Clock, Users, Activity, Wallet, Layout, ChevronRight } from 'lucide-react';
+import { Plus, Shield, Clock, Users, Activity, Wallet, Layout, ChevronRight, History } from 'lucide-react';
 import Scene from './components/Scene';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -113,6 +113,9 @@ function App() {
         setLoading(false);
     };
 
+    const activeElections = elections.filter(e => e.endTime > Math.floor(Date.now() / 1000));
+    const pastElections = elections.filter(e => e.endTime <= Math.floor(Date.now() / 1000));
+
     return (
         <div className="app-canvas overflow-hidden">
             <Scene />
@@ -130,21 +133,21 @@ function App() {
                         <h2 className="brand-logo m-0">VOTE<span className="text-accent">DAPP</span></h2>
                     </motion.div>
 
-                    <div className="nav-actions d-flex gap-3">
+                    <div className="nav-actions d-flex gap-2 gap-md-3">
                         {isAdmin && (
                             <button className="btn-icon" onClick={() => setShowAdminPanel(!showAdminPanel)}>
                                 <Plus size={20} />
                             </button>
                         )}
                         <button className="btn-wallet" onClick={connect}>
-                            <Wallet size={18} className="me-2" />
-                            {account ? `${account.slice(0,6)}...${account.slice(-4)}` : "Connect"}
+                            <Wallet size={18} className="me-0 me-md-2" />
+                            <span className="d-none d-md-inline">{account ? `${account.slice(0,6)}...${account.slice(-4)}` : "Connect"}</span>
                         </button>
                     </div>
                 </div>
             </nav>
 
-            <main className="container-fluid py-5 main-content">
+            <main className="container-fluid py-4 py-md-5 main-content">
                 <AnimatePresence>
                     {showAdminPanel && isAdmin && (
                         <motion.div 
@@ -186,19 +189,19 @@ function App() {
                 </AnimatePresence>
 
                 <div className="content-grid container">
-                    <div className="section-header d-flex align-items-center mb-5">
+                    {/* ACTIVE ELECTIONS */}
+                    <div className="section-header d-flex align-items-center mb-4 mb-md-5">
                         <div className="pulse-dot me-3"></div>
-                        <h3 className="section-title m-0">Live Governance Sessions</h3>
+                        <h3 className="section-title m-0">Live Governance</h3>
                     </div>
 
-                    <div className="row g-5">
-                        {elections.length === 0 && (
+                    <div className="row g-4 g-md-5 mb-5">
+                        {activeElections.length === 0 && (
                             <div className="col-12 text-center py-5">
-                                <Layout size={48} className="text-secondary opacity-25 mb-3" />
-                                <p className="text-muted">No active elections found on the Ethereum blockchain.</p>
+                                <p className="text-muted">No live elections at the moment.</p>
                             </div>
                         )}
-                        {elections.map((e, index) => (
+                        {activeElections.map((e, index) => (
                             <motion.div 
                                 key={e.id} 
                                 initial={{ opacity: 0, y: 30 }}
@@ -209,8 +212,8 @@ function App() {
                                 <div className="premium-card">
                                     <div className="card-top d-flex justify-content-between align-items-start mb-4">
                                         <div className="title-area">
-                                            <h4 className="election-title mb-1">{e.title}</h4>
-                                            <p className="election-desc">{e.desc}</p>
+                                            <h4 className="election-title mb-1 text-truncate">{e.title}</h4>
+                                            <p className="election-desc line-clamp-2">{e.desc}</p>
                                         </div>
                                         <Timer endTime={e.endTime} />
                                     </div>
@@ -222,11 +225,11 @@ function App() {
                                                     <span className="c-name">{c.name}</span>
                                                     <div className="voter-stats d-flex align-items-center mt-1">
                                                         <Users size={12} className="me-1 opacity-50" />
-                                                        <span className="c-votes">{c.votes} </span>
+                                                        <span className="c-votes">{c.votes}</span>
                                                     </div>
                                                 </div>
                                                 <button className="btn-cast" onClick={() => castVote(e.id, idx)}>
-                                                    VOTE <ChevronRight size={14} />
+                                                    VOTE <ChevronRight size={14} className="d-none d-md-inline" />
                                                 </button>
                                             </div>
                                         ))}
@@ -235,9 +238,36 @@ function App() {
                             </motion.div>
                         ))}
                     </div>
+
+                    {/* PAST ELECTIONS */}
+                    {pastElections.length > 0 && (
+                        <>
+                            <div className="section-header d-flex align-items-center mb-4 mt-5">
+                                <History size={24} className="text-secondary me-3" />
+                                <h3 className="section-title m-0 text-secondary">Historical Archive</h3>
+                            </div>
+                            <div className="row g-4">
+                                {pastElections.map((e) => (
+                                    <div key={e.id} className="col-lg-4">
+                                        <div className="premium-card archive-card p-4">
+                                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 className="m-0 text-truncate">{e.title}</h5>
+                                                <Timer endTime={e.endTime} />
+                                            </div>
+                                            <div className="archive-stats d-flex justify-content-between">
+                                                <span className="text-muted small">ID: #{e.id}</span>
+                                                <span className="text-accent small font-monospace">CONCLUDED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </div>
             </main>
         </div>
     );
 }
-export default App;
+export default App;
+
