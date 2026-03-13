@@ -221,9 +221,9 @@ function App() {
                 </AnimatePresence>
 
                 <div className="section-suite mb-5">
-                    <div className="d-flex align-items-center mb-4 pb-2 border-bottom">
+                    <div className="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary">
                         <Activity size={20} className="text-primary me-2" />
-                        <h3 className="section-heading m-0 text-dark">Active Elections</h3>
+                        <h3 className="section-heading m-0 text-white">Active Elections</h3>
                     </div>
 
                     <div className="row g-4">
@@ -236,8 +236,8 @@ function App() {
                         {activeElections.map((e, index) => (
                             <motion.div 
                                 key={e.id} 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.05 }}
                                 className="col-xl-6"
                             >
@@ -245,14 +245,14 @@ function App() {
                                     <div className="card-header-suite">
                                         <div className="title-block">
                                             <h4 className="card-election-title mb-1">{e.title}</h4>
-                                            <p className="card-election-desc">{e.desc}</p>
+                                            <p className="card-election-desc text-muted mb-0">{e.desc}</p>
                                         </div>
                                         <Timer endTime={e.endTime} />
                                     </div>
                                     
                                     <div className="card-candidates mt-4">
                                         {e.candidates.map((c, idx) => (
-                                            <div key={idx} className="candidate-list-item">
+                                            <div key={idx} className="candidate-list-item mb-2 d-flex justify-content-between align-items-center">
                                                 <div className="c-details">
                                                     <span className="c-name">{c.name}</span>
                                                     <div className="c-stats">
@@ -274,7 +274,7 @@ function App() {
 
                 {pastElections.length > 0 && (
                     <div className="section-suite mt-5 pt-5">
-                        <div className="d-flex align-items-center mb-4 pb-2 border-bottom">
+                        <div className="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary">
                             <History size={20} className="text-muted me-2" />
                             <h3 className="section-heading m-0 text-muted">Historical Archive</h3>
                         </div>

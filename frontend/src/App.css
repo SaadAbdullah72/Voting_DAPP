@@ -124,51 +124,87 @@ body {
 
 /* HERO SECTION */
 .hero-section {
-  padding: 120px 0 100px 0;
+  padding: 140px 0 100px 0;
   width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .hero-label {
   display: inline-block;
-  padding: 8px 20px;
+  padding: 10px 24px;
   background: rgba(59, 130, 246, 0.1);
   color: var(--primary);
   border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 100px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   margin-bottom: 32px;
 }
 
 .hero-title {
   font-family: 'Outfit', sans-serif;
   font-weight: 800;
-  font-size: 4.5rem;
+  font-size: 5rem;
   color: #fff;
-  max-width: 900px;
-  margin: 0 auto 32px auto;
   letter-spacing: -0.04em;
-  line-height: 1;
+  line-height: 0.95;
+  margin-bottom: 32px;
 }
 
 .hero-description {
   color: var(--text-muted);
-  font-size: 1.25rem;
-  max-width: 700px;
+  font-size: 1.4rem;
+  max-width: 800px;
   margin: 0 auto;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
-.hero-features {
-  opacity: 0.8;
+.feature-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
 }
 
-/* MAIN CONTENT - Ensure Full Width Potential */
+/* MAIN CONTENT */
 .content-area {
-  max-width: 1400px !important; /* Allow wider content than standard container */
-  padding-bottom: 100px;
+  max-width: 1200px !important;
+  margin: 0 auto;
+  padding-top: 60px;
+  padding-bottom: 120px;
+  width: 100%;
+}
+
+.section-suite {
+  width: 100%;
+}
+
+.section-heading {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+}
+
+.empty-state {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border);
+  border-radius: 24px;
+  margin-top: 24px;
 }
 
 .election-card-professional {
@@ -235,23 +271,83 @@ body {
 
 /* ADMIN PANEL */
 .admin-dashboard {
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--primary);
-  border-radius: 24px;
-  box-shadow: 0 0 50px rgba(59, 130, 246, 0.1);
+  border-radius: 32px;
+  box-shadow: 0 0 80px rgba(59, 130, 246, 0.15);
+  padding: 10px;
+}
+
+.dashboard-card { 
+  background: transparent !important;
+  border: none !important;
+}
+
+.form-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
 }
 
 .form-control-custom {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
+  border-radius: 16px;
   color: #fff;
-  padding: 14px 20px;
+  padding: 16px 20px;
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-control-custom:focus {
-  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-confirm-action {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0 32px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 15px;
+  transition: 0.3s;
+  height: 100%;
+}
+
+.btn-confirm-action:hover:not(:disabled) {
+  background: #2563eb;
+  box-shadow: 0 0 30px var(--primary-glow);
+  transform: translateY(-2px);
+}
+
+.btn-close-minimal {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.btn-close-minimal:hover {
+  background: var(--danger);
+  border-color: var(--danger);
 }
 
 /* FOOTER */
